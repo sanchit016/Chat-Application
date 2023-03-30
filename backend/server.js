@@ -17,6 +17,8 @@ app.use(express.json()); // to accept json data
 //   res.send("API Running!");
 // });
 
+console.log("here1");
+
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
@@ -28,7 +30,7 @@ const __dirname1 = path.resolve();
 // console.log(process.env.NODE_ENV, process.env.NODE_ENV === "production");
 
 if (process.env.NODE_ENV === "production") {
-  // console.log("here");
+  console.log("here");
   app.use(express.static(path.join(__dirname1, "build")));
 
   app.get("*", (req, res) =>
@@ -41,6 +43,9 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+
+console.log("here2");
+
 // --------------------------deployment------------------------------
 
 // Error Handling middlewares
@@ -48,6 +53,8 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
+
+console.log("here3");
 
 const server = app.listen(
   PORT,
@@ -62,7 +69,10 @@ const io = require("socket.io")(server, {
   },
 });
 
+console.log("here4");
+
 io.on("connection", (socket) => {
+  console.log("here6");
   console.log("Connected to socket.io");
   socket.on("setup", (userData) => {
     socket.join(userData._id);
@@ -93,3 +103,6 @@ io.on("connection", (socket) => {
     socket.leave(userData._id);
   });
 });
+
+
+console.log("here5");

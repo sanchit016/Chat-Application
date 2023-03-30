@@ -46,10 +46,10 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
-console.log(process.env);
+// console.log(process.env);
 const server = app.listen(
   PORT,
-  console.log(`Server running on PORT ${PORT}...`.yellow.bold)
+  // console.log(`Server running on PORT ${PORT}...`.yellow.bold)
 );
 
 const io = require("socket.io")(server, {

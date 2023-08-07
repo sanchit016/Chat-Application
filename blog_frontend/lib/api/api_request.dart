@@ -11,7 +11,7 @@ class ApiRequest {
 
   ApiRequest({
     required this.baseUrl,
-    this.scheme = 'http',
+    this.scheme = 'https',
   });
   final log = getLogger("ApiRequest");
   Future<http.Response> response(
@@ -112,26 +112,21 @@ class ApiService {
       );
       if (response.statusCode == 200 ||
           response.statusCode == 201 && response.body.isNotEmpty) {
-        final body = json.decode(utf8.decode(response.bodyBytes));
-        Logger().i("inside core 1st $body --- ${body['statusCode']}");
-        success = body['success'] == true && body['data'] is List<dynamic>;
-        message = body['message'] ?? 'Failed to get data';
-        Logger().i("inside core 2nd ---- ${body['statusCode']}");
+        Logger().i("inside core 1st");
+        Map<String, dynamic> data = json.decode(response.body);
         final apiResponse = ResponseModel(
-          success: success,
-          statusCode: body['statusCode'],
-          message: message,
-          data: body['data'],
+          success: true,
+          data: [data],
         );
         return apiResponse;
       } else {
-        final body = json.decode(utf8.decode(response.bodyBytes));
+        Map<String, dynamic> data = json.decode(response.body);
         Logger().i(
-            "inside core 3rd $message in else status is ${response.statusCode} --- $body");
+            "inside core 2nd $message in else status is ${response.statusCode} --- $body");
         return ResponseModel(
           success: success,
-          message: body['message'] ?? "Something went wrong.",
-          statusCode: body['statusCode'] ?? 500,
+          message: data[0]['message'] ?? "Something went wrong.",
+          statusCode: data[0]['statusCode'] ?? 500,
         );
       }
     } on SocketException catch (e) {
@@ -158,6 +153,7 @@ class ApiService {
       "/api/auth/register",
       ApiType.post,
       contentType: "application/json",
+      accept: "application/json",
       body: jsonEncode(
         {
           "password": password,
@@ -166,6 +162,7 @@ class ApiService {
         },
       ),
     );
+    log.i(response.data);
     if (!response.hasData) {
       log.i("No data in response - signup - $email -$password");
       return Left(
@@ -176,7 +173,7 @@ class ApiService {
       );
     } else {
       log.i("In response has data ");
-      return Right(response.data?[0]["id"]);
+      return Right(response.data?[0]["_id"]);
     }
   }
 }

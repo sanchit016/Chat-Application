@@ -15,11 +15,9 @@ class SplashViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         setBusy(true);
-        log.i(localStorageService.read("uid"));
-        if (localStorageService.read("uid") == null) {
+        if (window.localStorage['id'] == null) {
           loggedIn = false;
           notifyListeners();
-          // navigationService.navigateTo(Routes.onboardingView);
           setBusy(false);
         } else {
           navigationService.clearStackAndShow(Routes.homeView);
@@ -47,8 +45,13 @@ class SplashViewModel extends BaseViewModel {
     final response = await ApiService.instance.signup(
         email: email.text, password: password.text, username: username.text);
     response.fold(
-      (l) => Fluttertoast.showToast(msg: l.message.isNotNull ? l.message! : ""),
-      (r) => {navigationService.navigateTo(Routes.homeView)},
+      (l) => Fluttertoast.showToast(
+          msg: l.message.isNotNull ? l.message! : "Error"),
+      (r) => {
+        log.i(r),
+        window.localStorage['id'] = r,
+        navigationService.navigateTo(Routes.homeView),
+      },
     );
   }
 }

@@ -55,6 +55,8 @@ dependencies:
   intl: ^0.18.1
   confetti: ^0.7.0
   activity_ring: ^0.3.0
+  web_socket_channel: ^2.4.0
+  universal_html: ^2.0.0
 
 dev_dependencies:
   flutter_test:

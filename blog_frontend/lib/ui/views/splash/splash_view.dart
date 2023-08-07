@@ -1,6 +1,7 @@
 import 'package:blog_frontend/ui/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:blog_frontend/file_exporter.dart';
+import 'package:universal_html/html.dart';
 
 part 'splash_view_model.dart';
 part 'splash_view_components.dart';

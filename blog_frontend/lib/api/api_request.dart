@@ -155,10 +155,9 @@ class ApiService {
     required String username,
   }) async {
     final response = await _makeApiCall(
-      "/api/",
+      "/api/auth/register",
       ApiType.post,
       contentType: "application/json",
-      accept: "application/json",
       body: jsonEncode(
         {
           "password": password,
@@ -177,7 +176,7 @@ class ApiService {
       );
     } else {
       log.i("In response has data ");
-      return Right(response.data?[0]);
+      return Right(response.data?[0]["id"]);
     }
   }
 }

@@ -21,7 +21,7 @@ class SplashView extends StatelessWidget {
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Padding(
-                padding: EdgeInsets.all(50.hWise),
+                padding: EdgeInsets.all(50),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +79,7 @@ class SplashView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    100.wGap,
+                    50.wGap,
                     if (model.showLogIn) ...[
                       const LoginForm(),
                     ],

@@ -1,6 +1,7 @@
 //NOTE!! DO NOT EXPORT VIEWS AND VIEW MODELS IN THE FILE EXPORTER
 //THEY ARE MEANT TO BE ACCESSED ONLY THROUGH ROUTES IN NAVIGATION
 
+
 export 'package:flutter/material.dart';
 
 export 'package:blog_frontend/api/api_request.dart';
@@ -32,3 +33,7 @@ export 'package:blog_frontend/app/app.router.dart';
 export 'package:blog_frontend/services/local_storage_services.dart';
 
 export 'package:stacked/stacked.dart';
+
+export 'package:blog_frontend/ui/components/screen_loader.dart';
+
+

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:blog_frontend/file_exporter.dart';
+import 'package:blog_frontend/models/blog_model.dart';
 import 'package:blog_frontend/models/error_response_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -110,6 +111,8 @@ class ApiService {
         headers: headers,
         body: body,
       );
+      log.i(response.statusCode);
+      log.i(response.body.isNotEmpty);
       if (response.statusCode == 200 ||
           response.statusCode == 201 && response.body.isNotEmpty) {
         Logger().i("inside core 1st");
@@ -122,7 +125,7 @@ class ApiService {
       } else {
         Map<String, dynamic> data = json.decode(response.body);
         Logger().i(
-            "inside core 2nd $message in else status is ${response.statusCode} --- $body");
+            "inside core 2nd $message in else status is ${response.statusCode}");
         return ResponseModel(
           success: success,
           message: data[0]['message'] ?? "Something went wrong.",
@@ -172,6 +175,99 @@ class ApiService {
         ),
       );
     } else {
+      log.i("In response has data ");
+      return Right(response.data?[0]["_id"]);
+    }
+  }
+
+  Future<Either<ErrorResponseModel, String>> login({
+    required String password,
+    required String username,
+  }) async {
+    final response = await _makeApiCall(
+      "/api/auth/login",
+      ApiType.post,
+      contentType: "application/json",
+      accept: "application/json",
+      body: jsonEncode(
+        {
+          "password": password,
+          "username": username,
+        },
+      ),
+    );
+    log.i(response.data);
+    if (!response.hasData) {
+      log.i("No data in response - login");
+      return Left(
+        ErrorResponseModel(
+          errorCode: 1,
+          message: response.message,
+        ),
+      );
+    } else {
+      log.i("In response has data ");
+      return Right(response.data?[0]["_id"]);
+    }
+  }
+
+  Future<Either<ErrorResponseModel, String>> createPost({
+    required String title,
+    required String username,
+    required String description,
+    String? image,
+  }) async {
+    final response = await _makeApiCall(
+      "/api/posts",
+      ApiType.post,
+      contentType: "application/json",
+      accept: "application/json",
+      body: image.isNotNull
+          ? jsonEncode(
+              {
+                "title": title,
+                "username": username,
+                "desc": description,
+                "photo": image!
+              },
+            )
+          : jsonEncode(
+              {"title": title, "username": username, "desc": description},
+            ),
+    );
+    log.i(response.data);
+    if (!response.hasData) {
+      log.i("No data in response");
+      return Left(
+        ErrorResponseModel(
+          errorCode: 1,
+          message: response.message,
+        ),
+      );
+    } else {
+      log.i("In response has data ");
+      return Right(response.data?[0]["_id"]);
+    }
+  }
+
+  Future<Either<ErrorResponseModel, List<BlogModel>>> getPosts() async {
+    final response = await _makeApiCall(
+      "/api/posts",
+      ApiType.get,
+      contentType: "application/json",
+      accept: "application/json",
+    );
+    log.i(response.data);
+    if (!response.hasData) {
+      log.i("No data in response");
+      return Left(
+        ErrorResponseModel(
+          errorCode: 1,
+          message: response.message,
+        ),
+      );
+    } else {
+      log.i(response.data?[0]);
       log.i("In response has data ");
       return Right(response.data?[0]["_id"]);
     }

@@ -39,18 +39,34 @@ class SplashViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onPressedLogin() {}
+  void onPressedLogin() async {
+    final response = await ApiService.instance
+        .login(password: password.text, username: username.text);
+    response.fold(
+      (l) => {
+        Fluttertoast.showToast(msg: l.message.isNotNull ? l.message! : "Error"),
+      },
+      (r) => {
+        log.i(r),
+        window.localStorage['id'] = r,
+        window.localStorage['username'] = username.text,
+        navigationService.clearStackAndShow(Routes.homeView),
+      },
+    );
+  }
 
   void onPressedSignUp() async {
     final response = await ApiService.instance.signup(
         email: email.text, password: password.text, username: username.text);
     response.fold(
-      (l) => Fluttertoast.showToast(
-          msg: l.message.isNotNull ? l.message! : "Error"),
+      (l) => {
+        Fluttertoast.showToast(msg: l.message.isNotNull ? l.message! : "Error"),
+      },
       (r) => {
         log.i(r),
         window.localStorage['id'] = r,
-        navigationService.navigateTo(Routes.homeView),
+        window.localStorage['username'] = username.text,
+        navigationService.clearStackAndShow(Routes.homeView),
       },
     );
   }

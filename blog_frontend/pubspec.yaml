@@ -57,6 +57,7 @@ dependencies:
   activity_ring: ^0.3.0
   web_socket_channel: ^2.4.0
   universal_html: ^2.0.0
+  screen_loader: ^4.0.1
 
 dev_dependencies:
   flutter_test:

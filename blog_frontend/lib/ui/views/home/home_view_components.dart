@@ -24,7 +24,7 @@ class Options extends ViewModelWidget<HomeViewModel> {
           ).alignCR,
           20.hGap,
           GestureDetector(
-            onTap: viewModel.onPressedHome,
+            onTap: viewModel.onPressedMyPosts,
             child: AppText(
               text: "My Posts",
               fontSize: 20.hWise,
@@ -181,6 +181,124 @@ class ViewHome extends ViewModelWidget<HomeViewModel> {
           color: Color.fromARGB(255, 45, 26, 129),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Container());
+        child: Column(
+          children: [
+            SizedBox(
+              height: 600.hWise,
+              child: GridView.count(
+                scrollDirection: Axis.vertical,
+                crossAxisCount: 4,
+                childAspectRatio: 1,
+                children: [
+                  for (int i = 0; i < viewModel.posts.length; i++)
+                    Padding(
+                      padding: EdgeInsets.all(8.hWise),
+                      child: BlogCard(
+                        index: i,
+                      ),
+                    )
+                ],
+              ),
+            )
+          ],
+        ));
+  }
+}
+
+class BlogCard extends ViewModelWidget<HomeViewModel> {
+  final int index;
+  const BlogCard({super.key, required this.index});
+
+  @override
+  Widget build(BuildContext context, HomeViewModel viewModel) {
+    return GestureDetector(
+      onTap: () => _showDescriptionDialog(context, viewModel),
+      child: Container(
+        width: 250.wWise,
+        height: 250.hWise,
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            AppText(
+              text: viewModel.posts[index].title!,
+              fontSize: 20.hWise,
+              color: Colors.white,
+            ),
+            if (!viewModel.posts[index].photo.isNullOrEmpty) ...[
+              Image.memory(
+                viewModel._dataUriToBytes(viewModel.posts[index].photo!),
+              ),
+            ] else ...[
+              Expanded(
+                child: Image.asset("assets/img/splash.png"),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDescriptionDialog(BuildContext context, HomeViewModel viewModel) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(viewModel.posts[index].title!),
+        content: Text(viewModel.posts[index].description!),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ViewMyPosts extends ViewModelWidget<HomeViewModel> {
+  const ViewMyPosts({super.key});
+
+  @override
+  Widget build(BuildContext context, HomeViewModel viewModel) {
+    return Container(
+        padding: EdgeInsets.all(50),
+        width: context.w -
+            (viewModel.showOptions ? 1 : 0) * (300.wWise) -
+            100.wWise,
+        height: 700.hWise,
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 45, 26, 129),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 600.hWise,
+              child: GridView.count(
+                scrollDirection: Axis.vertical,
+                crossAxisCount: 4,
+                childAspectRatio: 1,
+                children: [
+                  for (int i = 0; i < viewModel.posts.length; i++)
+                    if (viewModel.username == viewModel.posts[i].username) ...[
+                      Padding(
+                        padding: EdgeInsets.all(8.hWise),
+                        child: BlogCard(
+                          index: i,
+                        ),
+                      )
+                    ]
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }

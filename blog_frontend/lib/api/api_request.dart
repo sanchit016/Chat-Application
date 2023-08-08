@@ -257,7 +257,6 @@ class ApiService {
       contentType: "application/json",
       accept: "application/json",
     );
-    log.i(response.data);
     if (!response.hasData) {
       log.i("No data in response");
       return Left(
@@ -267,9 +266,10 @@ class ApiService {
         ),
       );
     } else {
-      log.i(response.data?[0]);
       log.i("In response has data ");
-      return Right(response.data?[0]["_id"]);
+      List<dynamic> temp = response.data?[0]["data"];
+      List<BlogModel> ans = temp.map((e) => BlogModel.fromJson(e)).toList();
+      return Right(ans);
     }
   }
 }

@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:blog_frontend/models/blog_model.dart';
 import 'package:blog_frontend/ui/components/button.dart';
 import 'package:universal_html/html.dart';
 import 'package:blog_frontend/file_exporter.dart';
 import 'dart:html' as html;
+
 part 'home_view_components.dart';
 part 'home_view_model.dart';
 
@@ -47,7 +49,9 @@ class HomeView extends StatelessWidget {
                 Row(
                   children: [
                     50.wGap,
-                    if (!model.showHome) ...[AddPost()] else ...[ViewHome()],
+                    if (model.showHome) ...[ViewHome()],
+                    if (model.showAddPost) ...[AddPost()],
+                    if (model.showMyPosts) ...[ViewMyPosts()],
                     20.wGap,
                     if (model.showOptions) ...[Options()],
                   ],

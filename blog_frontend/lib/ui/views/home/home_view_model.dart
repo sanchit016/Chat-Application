@@ -4,12 +4,24 @@ class HomeViewModel extends BaseViewModel {
   final navigationService = locator<NavigationService>();
   bool showOptions = false;
   bool showHome = true;
+  bool showMyPosts = false;
+  bool showAddPost = false;
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
   String? imageDataUrl;
+  List<BlogModel> posts = [];
   final log = getLogger("HomeViewModel");
+  String username = "";
   init() {
+    username = window.localStorage['username']!;
     getPosts();
+  }
+
+  void onPressedMyPosts() {
+    showHome = false;
+    showMyPosts = true;
+    showAddPost = false;
+    notifyListeners();
   }
 
   void onPressedLogout() {
@@ -25,6 +37,8 @@ class HomeViewModel extends BaseViewModel {
 
   void onAddPost() {
     showHome = false;
+    showMyPosts = false;
+    showAddPost = true;
     notifyListeners();
   }
 
@@ -32,6 +46,8 @@ class HomeViewModel extends BaseViewModel {
 
   void onPressedHome() {
     showHome = true;
+    showMyPosts = false;
+    showAddPost = false;
     notifyListeners();
   }
 
@@ -91,9 +107,8 @@ class HomeViewModel extends BaseViewModel {
       (l) => {
         Fluttertoast.showToast(msg: l.message.isNotNull ? l.message! : "error"),
       },
-      (r) => {
-        log.i(r),
-      },
+      (r) =>
+          {posts = r, log.i('total posts: ${posts.length}'), notifyListeners()},
     );
   }
 }
